@@ -25,34 +25,34 @@ func NewItemRepository(db *gorm.DB) *ItemRepository {
 func (r *ItemRepository) GetItems(c *gin.Context) {
 	var items []Item
 	// ดึงข้อมูล Item ทั้งหมดจากฐานข้อมูล และเก็บลงในตัวแปร items
-	r.Db.Find(&items) 	// SELECT * FROM items
-	c.JSON(200, items)	// ส่งข้อมูลกลับไปให้ผู้ใช้งาน
+	r.Db.Find(&items)  // SELECT * FROM items
+	c.JSON(200, items) // ส่งข้อมูลกลับไปให้ผู้ใช้งาน
 }
 
 // ทำหน้าที่เพิ่มข้อมูล Item ลงในฐานข้อมูล และส่งกลับไปให้ผู้ใช้งานผ่าน c.JSON(200, newItem)
 func (r *ItemRepository) PostItem(c *gin.Context) {
 	var newItem Item
-	c.BindJSON(&newItem)	// รับค่า JSON จากผู้ใช้งาน และแปลงเป็น struct ของ Item
-	r.Db.Create(&newItem)	// INSERT INTO items (name, price) VALUES (newItem.Name, newItem.Price)
-	c.JSON(200, newItem)	// ส่งข้อมูลกลับไปให้ผู้ใช้งาน
+	c.BindJSON(&newItem)  // รับค่า JSON จากผู้ใช้งาน และแปลงเป็น struct ของ Item
+	r.Db.Create(&newItem) // INSERT INTO items (name, price) VALUES (newItem.Name, newItem.Price)
+	c.JSON(200, newItem)  // ส่งข้อมูลกลับไปให้ผู้ใช้งาน
 }
 
 // ฟังก์ชันค้นหา Item จากฐานข้อมูล โดยใช้ id ที่รับเข้ามาเป็นเงื่อนไขในการค้นหา
 // ฟังก์ชันนี้ parameter ที่รับมาจะเป็น pointer ของ gin.Context เพราะเราจะใช้ c.JSON ส่งค่ากลับไปให้ผู้ใช้งาน
 func (r *ItemRepository) GetItem(c *gin.Context) {
-	id := c.Param("id")		// รับค่า id จากผู้ใช้งาน
-	var item Item			// สร้างตัวแปร item เพื่อเก็บข้อมูลที่ค้นหาได้
-	r.Db.First(&item, id)	// SELECT * FROM items WHERE id = id
-	c.JSON(200, item)		// ส่งข้อมูลกลับไปให้ผู้ใช้งาน
+	id := c.Param("id")   // รับค่า id จากผู้ใช้งาน
+	var item Item         // สร้างตัวแปร item เพื่อเก็บข้อมูลที่ค้นหาได้
+	r.Db.First(&item, id) // SELECT * FROM items WHERE id = id
+	c.JSON(200, item)     // ส่งข้อมูลกลับไปให้ผู้ใช้งาน
 }
 
 // ฟังก์ชันอัพเดทข้อมูล Item ลงในฐานข้อมูล และส่งกลับไปให้ผู้ใช้งานผ่าน c.JSON(200, item)
 func (r *ItemRepository) UpdateItem(c *gin.Context) {
 	id := c.Param("id")
 	var item Item
-	r.Db.First(&item, id)	// SELECT * FROM items WHERE id = id
+	r.Db.First(&item, id) // SELECT * FROM items WHERE id = id
 	c.BindJSON(&item)
-	r.Db.Save(&item)	// UPDATE items SET name = item.Name, price = item.Price WHERE id = id
+	r.Db.Save(&item) // UPDATE items SET name = item.Name, price = item.Price WHERE id = id
 	c.JSON(200, item)
 }
 
@@ -62,6 +62,6 @@ func (r *ItemRepository) UpdateItem(c *gin.Context) {
 func (r *ItemRepository) DeleteItem(c *gin.Context) {
 	id := c.Param("id")
 	var item Item
-	r.Db.Delete(&item, id)	// DELETE FROM items WHERE id = id
+	r.Db.Delete(&item, id) // DELETE FROM items WHERE id = id
 	c.JSON(200, gin.H{"id" + id: "is deleted"})
 }
